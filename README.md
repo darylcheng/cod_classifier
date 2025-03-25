@@ -14,6 +14,7 @@ This is published at http://darylcheng.github.io/cod_classifer
 
 ## Planned features
 
+- Make usable offline / as mobile app as a PWA
 - Ability to input trial IDs
 - Ability to go back a step
 - Batch output to export CSV after finished
