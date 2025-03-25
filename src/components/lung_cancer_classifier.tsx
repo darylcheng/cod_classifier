@@ -7,11 +7,15 @@ interface AnswersState {
   interventionDeath: AnswerOption;
   interventionForLC: AnswerOption;
   metastasisEvidence: AnswerOption;
-  tumorEvidence: AnswerOption;
+  metastasisLC: AnswerOption;
+  tumourEvidence: AnswerOption;
+  tumourLC: AnswerOption;
   paraneoplasticEvidence: AnswerOption;
+  paraneoplasticLC: AnswerOption;
   clearCauseOtherThanLC: AnswerOption;
   wasThisCoD: AnswerOption;
-  otherCoDPresent: AnswerOption;
+  otherCoDPresent3: AnswerOption;
+  otherCoDPresent4: AnswerOption;
   otherCoDDirectResultOfLC: AnswerOption;
   lcContributingFactor: AnswerOption;
 }
@@ -48,11 +52,15 @@ const LungCancerClassifier: React.FC = () => {
     interventionDeath: null,
     interventionForLC: null,
     metastasisEvidence: null,
-    tumorEvidence: null,
+    metastasisLC: null,
+    tumourEvidence: null,
+    tumourLC: null,
     paraneoplasticEvidence: null,
+    paraneoplasticLC: null,
     clearCauseOtherThanLC: null,
     wasThisCoD: null,
-    otherCoDPresent: null,
+    otherCoDPresent3: null,
+    otherCoDPresent4: null,
     otherCoDDirectResultOfLC: null,
     lcContributingFactor: null
   });
@@ -69,11 +77,15 @@ const LungCancerClassifier: React.FC = () => {
       interventionDeath: null,
       interventionForLC: null,
       metastasisEvidence: null,
-      tumorEvidence: null,
+      metastasisLC: null,
+      tumourEvidence: null,
+      tumourLC: null,
       paraneoplasticEvidence: null,
+      paraneoplasticLC: null,
       clearCauseOtherThanLC: null,
       wasThisCoD: null,
-      otherCoDPresent: null,
+      otherCoDPresent3: null,
+      otherCoDPresent4: null,
       otherCoDDirectResultOfLC: null,
       lcContributingFactor: null
     });
@@ -105,10 +117,9 @@ const LungCancerClassifier: React.FC = () => {
           return { type: 'question', value: 'interventionForLC' };
         } else if (answer === 'no') {
           return { type: 'question', value: 'metastasisEvidence' };
-        } else if (answer === 'doubt') {
-          return { type: 'classification', value: 'possible_lc_death' };
         } else {
-          return { type: 'classification', value: 'not_enough_information' };
+          // The diagram only shows yes/no for this question
+          return { type: 'question', value: 'metastasisEvidence' };
         }
       
       case 'interventionForLC':
@@ -118,36 +129,69 @@ const LungCancerClassifier: React.FC = () => {
           return { type: 'question', value: 'lcContributingFactor' };
         } else if (answer === 'doubt') {
           return { type: 'classification', value: 'possible_lc_death' };
-        } else {
-          return { type: 'classification', value: 'not_enough_information' };
+        } else { // not_enough_information
+          return { type: 'classification', value: 'possible_lc_death' };
         }
       
       case 'metastasisEvidence':
         if (answer === 'yes') {
-          return { type: 'question', value: 'wasThisCoD' };
+          return { type: 'question', value: 'metastasisLC' };
         } else if (answer === 'no') {
-          return { type: 'question', value: 'tumorEvidence' };
+          return { type: 'question', value: 'tumourEvidence' };
         } else {
-          return { type: 'question', value: 'tumorEvidence' };
+          return { type: 'question', value: 'tumourEvidence' };
         }
 
-      case 'tumorEvidence':
+      case 'metastasisLC':
         if (answer === 'yes') {
           return { type: 'question', value: 'wasThisCoD' };
         } else if (answer === 'no') {
+          return { type: 'question', value: 'wasThisCoD' };
+        } else if (answer === 'doubt') {
+          return { type: 'question', value: 'wasThisCoD' };
+        } else { // not_enough_information
+          return { type: 'question', value: 'wasThisCoD' };
+        }
+
+      case 'tumourEvidence':
+        if (answer === 'yes') {
+          return { type: 'question', value: 'tumourLC' };
+        } else if (answer === 'no') {
           return { type: 'question', value: 'paraneoplasticEvidence' };
         } else {
           return { type: 'question', value: 'paraneoplasticEvidence' };
+        }
+
+      case 'tumourLC':
+        if (answer === 'yes') {
+          return { type: 'question', value: 'wasThisCoD' };
+        } else if (answer === 'no') {
+          return { type: 'question', value: 'wasThisCoD' };
+        } else if (answer === 'doubt') {
+          return { type: 'question', value: 'wasThisCoD' };
+        } else { // not_enough_information
+          return { type: 'question', value: 'wasThisCoD' };
         }
 
       case 'paraneoplasticEvidence':
         if (answer === 'yes') {
-          return { type: 'question', value: 'wasThisCoD' };
+          return { type: 'question', value: 'paraneoplasticLC' };
         } else if (answer === 'no') {
           return { type: 'question', value: 'clearCauseOtherThanLC' };
         } else {
           return { type: 'question', value: 'clearCauseOtherThanLC' };
         }
+
+        case 'paraneoplasticLC':
+          if (answer === 'yes') {
+            return { type: 'question', value: 'wasThisCoD' };
+          } else if (answer === 'no') {
+            return { type: 'question', value: 'wasThisCoD' };
+          } else if (answer === 'doubt') {
+            return { type: 'question', value: 'wasThisCoD' };
+          } else { // not_enough_information
+            return { type: 'question', value: 'wasThisCoD' };
+          }
 
       case 'clearCauseOtherThanLC':
         if (answer === 'yes') {
@@ -160,44 +204,82 @@ const LungCancerClassifier: React.FC = () => {
 
       case 'wasThisCoD':
         if (answer === 'yes') {
-          return { type: 'classification', value: 'definitely_lc_death' };
-        } else if (answer === 'no') {
-          return { type: 'question', value: 'otherCoDPresent' };
-        } else if (answer === 'doubt') {
-          return { type: 'question', value: 'otherCoDPresent' };
-        } else {
-          return { type: 'classification', value: 'not_enough_information' };
+          // depends how we got here
+          // if metastasisLC, tumourEvidence, or paraneoplasticEvidence was yes
+          // then definitely_lc_death
+          if (currentAnswers.metastasisLC === 'yes' || currentAnswers.tumourLC === 'yes' || currentAnswers.paraneoplasticLC === 'yes') {
+            return { type: 'classification', value: 'definitely_lc_death' };
+          } else if (currentAnswers.metastasisLC === 'no' || currentAnswers.tumourLC === 'no' || currentAnswers.paraneoplasticLC === 'no') {
+            return { type: 'question', value: 'lcContributingFactor' };
+          } else if (currentAnswers.metastasisLC === 'doubt' || currentAnswers.tumourLC === 'doubt' || currentAnswers.paraneoplasticLC === 'doubt') {
+            return { type: 'classification', value: 'possible_lc_death' };
+          } else {
+            return { type: 'classification', value: 'possible_lc_death' };
+          }
+        } 
+        // else if answers are doubt, no or not enough info, and metastasisLC, tumourEvidence, or paraneoplasticEvidence was no
+        // then ask otherCoDPresent3
+        else {
+          if (currentAnswers.metastasisLC === 'no' || currentAnswers.tumourLC === 'no' || currentAnswers.paraneoplasticLC === 'no') {
+            return { type: 'question', value: 'otherCoDPresent3' };
+          }
+          else { // else ask otherCoDPresent4
+            return { type: 'question', value: 'otherCoDPresent4' };
+          }
         }
 
-      case 'otherCoDPresent':
+      case 'otherCoDPresent3':
         if (answer === 'yes') {
+          // if yes, ask if other CoD direct result of LC
           return { type: 'question', value: 'otherCoDDirectResultOfLC' };
         } else if (answer === 'no') {
-          return { type: 'question', value: 'lcContributingFactor' };
-        } else if (answer === 'doubt') {
-          return { type: 'classification', value: currentAnswers.metastasisEvidence === 'yes' ? 'probable_lc_death' : (currentAnswers.tumorEvidence === 'yes' ? 'unlikely_lc_death' : 'possible_lc_death') };
-        } else {
-          return { type: 'classification', value: 'not_enough_information' };
-        }
+          // if no, depends on how we got here
+          // if metastasisLC, tumourEvidence, or paraneoplasticEvidence was yes, then probable_lc_death
+          if (currentAnswers.metastasisLC === 'yes' || currentAnswers.tumourLC === 'yes' || currentAnswers.paraneoplasticLC === 'yes') {
+            return { type: 'classification', value: 'probable_lc_death' };
+            // if metastasisLC, tumourEvidence, or paraneoplasticEvidence was no, then unlikely_lc_death
+          } else if (currentAnswers.metastasisLC === 'no' || currentAnswers.tumourLC === 'no' || currentAnswers.paraneoplasticLC === 'no') {
+            return { type: 'classification', value: 'unlikely_lc_death' };
+            // if doubt or not enough info for metastasisLC, tumourEvidence, or paraneoplasticEvidence, then possible_lc_death
+          } else { // only remaining option is doubt or not enough info
+            return { type: 'classification', value: 'possible_lc_death' };
+          }
+        } 
+        // besides yes and no, other CoD answers are doubt or not enough info
+        // follows the same path as no
+        else {
+          // if no, depends on how we got here
+          // if metastasisLC, tumourEvidence, or paraneoplasticEvidence was yes, then probable_lc_death
+          if (currentAnswers.metastasisLC === 'yes' || currentAnswers.tumourLC === 'yes' || currentAnswers.paraneoplasticLC === 'yes') {
+            return { type: 'classification', value: 'probable_lc_death' };
+            // if metastasisLC, tumourEvidence, or paraneoplasticEvidence was no, then unlikely_lc_death
+          } else if (currentAnswers.metastasisLC === 'no' || currentAnswers.tumourLC === 'no' || currentAnswers.paraneoplasticLC === 'no') {
+            return { type: 'classification', value: 'unlikely_lc_death' };
+            // if doubt or not enough info for metastasisLC, tumourEvidence, or paraneoplasticEvidence, then possible_lc_death
+          } else { 
+            return { type: 'classification', value: 'possible_lc_death' };
+          }
+        } 
+
+        // single question for the 4 answer option of otherCoDPresent
+        case 'otherCoDPresent4':
+          if (answer === 'yes') {
+            // if yes, ask if other CoD direct result of LC
+            return { type: 'question', value: 'otherCoDDirectResultOfLC' };
+          } else {
+            return { type: 'classification', value: 'possible_lc_death' };
+          }
+
 
       case 'otherCoDDirectResultOfLC':
         if (answer === 'yes') {
           return { type: 'classification', value: 'definitely_lc_death' };
         } else if (answer === 'no') {
-          // This branch varies depending on metastasis/tumor/paraneoplastic
-          if (currentAnswers.metastasisEvidence === 'yes') {
-            return { type: 'classification', value: 'probable_lc_death' };
-          } else if (currentAnswers.tumorEvidence === 'yes') {
-            return { type: 'classification', value: 'unlikely_lc_death' };
-          } else if (currentAnswers.paraneoplasticEvidence === 'yes') {
-            return { type: 'classification', value: 'possible_lc_death' };
-          } else {
-            return { type: 'classification', value: 'unlikely_lc_death' };
-          }
+          return { type: 'question', value: 'lcContributingFactor' };
         } else if (answer === 'doubt') {
-          return { type: 'classification', value: currentAnswers.metastasisEvidence === 'yes' ? 'probable_lc_death' : (currentAnswers.tumorEvidence === 'yes' ? 'unlikely_lc_death' : 'possible_lc_death') };
-        } else {
-          return { type: 'classification', value: 'not_enough_information' };
+          return { type: 'question', value: 'lcContributingFactor' };
+        } else { // not_enough_information
+          return { type: 'question', value: 'lcContributingFactor' };
         }
 
       case 'lcContributingFactor':
@@ -206,9 +288,10 @@ const LungCancerClassifier: React.FC = () => {
         } else if (answer === 'no') {
           return { type: 'classification', value: 'definitely_no_lc_death' };
         } else if (answer === 'doubt') {
-          return { type: 'classification', value: 'intercurrent_cod_lc_contributory' };
-        } else {
-          return { type: 'classification', value: 'not_enough_information' };
+          return { type: 'classification', value: 'definitely_no_lc_death' };
+        } else { // not_enough_information
+          // According to flowchart, not_enough_info follows same path as doubt
+          return { type: 'classification', value: 'definitely_no_lc_death' };
         }
 
       default:
@@ -219,8 +302,8 @@ const LungCancerClassifier: React.FC = () => {
   // Questions definitions with their text
   const questions: QuestionsMap = {
     interventionDeath: {
-      text: "1. Death as a result of an intervention for lung cancer?",
-      options: ['yes', 'no', 'doubt', 'not_enough_information']
+      text: "1. Death as a result of an intervention?",
+      options: ['yes', 'no']
     },
     interventionForLC: {
       text: "Was the intervention for lung cancer?",
@@ -230,13 +313,25 @@ const LungCancerClassifier: React.FC = () => {
       text: "2. Evidence for progressive, recurrent or new metastasis present?",
       options: ['yes', 'no']
     },
-    tumorEvidence: {
+    metastasisLC: {
+      text: "Metastasis lung cancer?",
+      options: ['yes', 'no', 'doubt', 'not_enough_information']
+    },
+    tumourEvidence: {
       text: "3. Evidence for progressive, recurrent or second primary tumour present?",
       options: ['yes', 'no']
+    },
+    tumourLC: {
+      text: "Tumour lung cancer?",
+      options: ['yes', 'no', 'doubt', 'not_enough_information']
     },
     paraneoplasticEvidence: {
       text: "4. Evidence for paraneoplastic syndrome present?",
       options: ['yes', 'no']
+    },
+    paraneoplasticLC: {
+      text: "Paraneoplastic syndrome result of lung cancer?",
+      options: ['yes', 'no', 'doubt', 'not_enough_information']
     },
     clearCauseOtherThanLC: {
       text: "5. Clear cause of death present, other than lung cancer?",
@@ -246,7 +341,11 @@ const LungCancerClassifier: React.FC = () => {
       text: "Was this the cause of death?",
       options: ['yes', 'no', 'doubt', 'not_enough_information']
     },
-    otherCoDPresent: {
+    otherCoDPresent3: {
+      text: "Other clear CoD present?",
+      options: ['yes', 'no', 'not_enough_information']
+    },
+    otherCoDPresent4: {
       text: "Other clear CoD present?",
       options: ['yes', 'no', 'doubt', 'not_enough_information']
     },
@@ -267,8 +366,7 @@ const LungCancerClassifier: React.FC = () => {
     possible_lc_death: "Possible LC death",
     unlikely_lc_death: "Unlikely LC death",
     definitely_no_lc_death: "Definitely no LC death",
-    intercurrent_cod_lc_contributory: "Intercurrent CoD, LC contributory",
-    not_enough_information: "Not enough information available"
+    intercurrent_cod_lc_contributory: "Intercurrent CoD, LC contributory"
   };
 
   // Format option text for display
@@ -309,7 +407,7 @@ const LungCancerClassifier: React.FC = () => {
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-lg">
-      <h1 className="text-2xl font-bold mb-6 text-center">Lung Cancer Cause of Death Classification Tool</h1>
+      <h1 className="text-2xl font-bold mb-6 text-left">Lung Cancer Cause of Death Classification Tool</h1>
       
       {!classification ? (
         <div className="space-y-6">
@@ -369,10 +467,9 @@ const LungCancerClassifier: React.FC = () => {
         </div>
       )}
       
-      <div className="mt-10 text-center text-sm text-gray-500">
-        <p>Based on the lung cancer death classification algorithm from</p>
-        <p>
-            Horeweg, Nanda, et al. <a href="https://doi.org/10.1016/j.lungcan.2012.04.018">"Blinded and uniform cause of death verification in a lung cancer CT screening trial."</a> <i>Lung Cancer</i> 77.3 (2012): 522-525.</p>
+      <div className="mt-10 text-left text-sm text-gray-500">
+      <p>This web app adapted by Daryl Cheng, March 2025, based on the lung cancer related death classification algorithm from:</p>
+      <p>Horeweg, Nanda, et al. <a href="https://doi.org/10.1016/j.lungcan.2012.04.018">"Blinded and uniform cause of death verification in a lung cancer CT screening trial."</a> <i>Lung Cancer</i> 77.3 (2012): 522-525.</p>
       </div>
     </div>
   );
