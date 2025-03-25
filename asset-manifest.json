@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/cod_classifier/static/css/main.e6c13ad2.css",
+    "main.js": "/cod_classifier/static/js/main.b1d8b0ad.js",
+    "static/js/453.c5d926bc.chunk.js": "/cod_classifier/static/js/453.c5d926bc.chunk.js",
+    "index.html": "/cod_classifier/index.html",
+    "main.e6c13ad2.css.map": "/cod_classifier/static/css/main.e6c13ad2.css.map",
+    "main.b1d8b0ad.js.map": "/cod_classifier/static/js/main.b1d8b0ad.js.map",
+    "453.c5d926bc.chunk.js.map": "/cod_classifier/static/js/453.c5d926bc.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e6c13ad2.css",
+    "static/js/main.b1d8b0ad.js"
+  ]
+}
