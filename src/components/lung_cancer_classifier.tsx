@@ -352,7 +352,7 @@ const LungCancerClassifier: React.FC = () => {
       options: ['yes', 'no']
     },
     metastasisLC: {
-      text: "Metastasis lung cancer?",
+      text: "Was the metastasis lung cancer?",
       options: ['yes', 'no', 'doubt', 'not_enough_information']
     },
     tumourEvidence: {
@@ -360,7 +360,7 @@ const LungCancerClassifier: React.FC = () => {
       options: ['yes', 'no']
     },
     tumourLC: {
-      text: "Tumour lung cancer?",
+      text: "Was the tumour lung cancer?",
       options: ['yes', 'no', 'doubt', 'not_enough_information']
     },
     paraneoplasticEvidence: {
@@ -493,8 +493,8 @@ const LungCancerClassifier: React.FC = () => {
       ) : (
         <div className="space-y-6">
           <div className={`p-6 rounded-lg text-center ${getClassificationColor(classification)}`}>
-            <h2 className="text-2xl font-bold mb-2">Classification Result</h2>
-            <p className="text-xl">{classificationDescriptions[classification]}</p>
+            <h2 className="text-xl mb-2">Classification Result</h2>
+            <p className="text-2xl font-bold">{classificationDescriptions[classification]}</p>
           </div>
           
           <div className="mt-8">
