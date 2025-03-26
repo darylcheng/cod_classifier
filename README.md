@@ -28,5 +28,4 @@ This is published at http://darylcheng.github.io/cod_classifer - simply visit th
 - Batch output to export CSV after finished
 
 
-## References
 [^1]: Horeweg, Nanda, et al. "Blinded and uniform cause of death verification in a lung cancer CT screening trial." Lung Cancer 77.3 (2012): 522-525.
