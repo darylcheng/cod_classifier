@@ -421,8 +421,8 @@ const LungCancerClassifier: React.FC = () => {
   // Determine the appropriate button color based on option
   const getButtonColor = (option: AnswerOption): string => {
     switch (option) {
-      case 'yes': return 'bg-green-500 hover:bg-green-600';
-      case 'no': return 'bg-red-500 hover:bg-red-600';
+      case 'yes': return 'bg-red-500 hover:bg-red-600';
+      case 'no': return 'bg-green-500 hover:bg-green-600';
       case 'doubt': return 'bg-yellow-500 hover:bg-yellow-600';
       case 'not_enough_information': return 'bg-gray-500 hover:bg-gray-600';
       default: return 'bg-blue-500 hover:bg-blue-600';
