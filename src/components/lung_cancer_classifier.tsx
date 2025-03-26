@@ -46,6 +46,12 @@ interface NextStep {
   value: string;
 }
 
+// Define a history item type to track the user's path
+interface HistoryItem {
+  question: QuestionKey;
+  answer: AnswerOption;
+}
+
 const LungCancerClassifier: React.FC = () => {
   // State to track answers to the decision tree questions
   const [answers, setAnswers] = useState<AnswersState>({
@@ -71,6 +77,9 @@ const LungCancerClassifier: React.FC = () => {
   // State to track the final classification result
   const [classification, setClassification] = useState<ClassificationType>(null);
   
+  // State to track the history of questions and answers
+  const [history, setHistory] = useState<HistoryItem[]>([]);
+  
   // Reset the form to start over
   const resetForm = () => {
     setAnswers({
@@ -91,10 +100,39 @@ const LungCancerClassifier: React.FC = () => {
     });
     setCurrentQuestion('interventionDeath');
     setClassification(null);
+    setHistory([]);
+  };
+
+  // Handle going back to the previous question
+  const handleGoBack = () => {
+    if (history.length === 0) return;
+    
+    // Get the last item from history
+    const newHistory = [...history];
+    const lastItem = newHistory.pop();
+    
+    if (!lastItem) return;
+    
+    // Create a new answers object with the last answer removed
+    const newAnswers = { ...answers };
+    newAnswers[lastItem.question] = null;
+    
+    // If we're going back from a classification result, clear it
+    setClassification(null);
+    
+    // Set the current question to the question we're going back to
+    setCurrentQuestion(lastItem.question);
+    
+    // Update state
+    setAnswers(newAnswers);
+    setHistory(newHistory);
   };
 
   // Handle answering a question
   const handleAnswer = (question: QuestionKey, answer: AnswerOption) => {
+    // Update history
+    setHistory([...history, { question, answer }]);
+    
     const newAnswers = { ...answers, [question]: answer };
     setAnswers(newAnswers);
     
@@ -383,8 +421,8 @@ const LungCancerClassifier: React.FC = () => {
   // Determine the appropriate button color based on option
   const getButtonColor = (option: AnswerOption): string => {
     switch (option) {
-      case 'yes': return 'bg-red-500 hover:bg-red-600';
-      case 'no': return 'bg-green-500 hover:bg-green-600';
+      case 'yes': return 'bg-green-500 hover:bg-green-600';
+      case 'no': return 'bg-red-500 hover:bg-red-600';
       case 'doubt': return 'bg-yellow-500 hover:bg-yellow-600';
       case 'not_enough_information': return 'bg-gray-500 hover:bg-gray-600';
       default: return 'bg-blue-500 hover:bg-blue-600';
@@ -424,6 +462,19 @@ const LungCancerClassifier: React.FC = () => {
                 </button>
               ))}
             </div>
+            
+            {/* Back button */}
+            {history.length > 0 && (
+              <button
+                className="mt-4 bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-4 rounded-lg font-medium transition-colors duration-200 flex items-center"
+                onClick={handleGoBack}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
+                </svg>
+                Back
+              </button>
+            )}
           </div>
           
           {/* Progress tracker */}
@@ -457,6 +508,19 @@ const LungCancerClassifier: React.FC = () => {
               ))}
             </div>
           </div>
+          
+          {/* Back button when viewing result */}
+          {history.length > 0 && (
+            <button
+              className="mt-4 bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-4 rounded-lg font-medium transition-colors duration-200 flex items-center"
+              onClick={handleGoBack}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
+              </svg>
+              Back
+            </button>
+          )}
           
           <button
             className="mt-6 w-full bg-blue-500 hover:bg-blue-600 text-white py-3 px-4 rounded-lg font-medium transition-colors duration-200"
