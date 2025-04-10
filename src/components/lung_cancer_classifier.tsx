@@ -443,6 +443,36 @@ const LungCancerClassifier: React.FC = () => {
     }
   };
 
+  // Copy path to clipboard function
+  const [copyButtonText, setCopyButtonText] = useState<string>("Copy path to clipboard");
+
+  const copyPathToClipboard = () => {
+    const pathText = Object.entries(answers)
+      .filter(([_, value]) => value !== null)
+      .map(([key, value]) => `${questions[key]?.text.split('?')[0]}? ${formatOption(value as AnswerOption)}`)
+      .join('\n');
+    
+    navigator.clipboard.writeText(pathText)
+      .then(() => {
+        // Change button text for visual feedback
+        setCopyButtonText("Copied!");
+        
+        // Reset button text after 2 seconds
+        setTimeout(() => {
+          setCopyButtonText("Copy path to clipboard");
+        }, 2000);
+      })
+      .catch(err => {
+        console.error('Failed to copy text: ', err);
+        setCopyButtonText("Failed to copy");
+        
+        // Reset button text after 2 seconds
+        setTimeout(() => {
+          setCopyButtonText("Copy path to clipboard");
+        }, 3000);
+      });
+  };
+
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-lg">
       <h1 className="text-2xl font-bold mb-6 text-left">Lung Cancer Cause of Death Classification Tool</h1>
@@ -499,13 +529,28 @@ const LungCancerClassifier: React.FC = () => {
           
           <div className="mt-8">
             <h3 className="text-sm font-medium text-gray-500 mb-2">Decision path:</h3>
-            <div className="flex flex-wrap gap-2">
-              {Object.entries(answers).filter(([_, value]) => value !== null).map(([key, value]) => (
-                <div key={key} className="bg-gray-100 px-3 py-1 rounded-full text-sm flex items-center">
-                  <span className="font-medium mr-1">{questions[key]?.text.split('?')[0]}?</span>
-                  <span className="text-gray-600">{formatOption(value as AnswerOption)}</span>
-                </div>
-              ))}
+            <div className="relative p-4 border border-gray-200 rounded-lg transition-colors duration-200 hover:bg-gray-50 group">
+              <div className="flex flex-wrap gap-2 mb-4">
+                {Object.entries(answers).filter(([_, value]) => value !== null).map(([key, value]) => (
+                  <div key={key} className="bg-gray-100 px-3 py-1 rounded-full text-sm flex items-center">
+                    <span className="font-medium mr-1">{questions[key]?.text.split('?')[0]}?</span>
+                    <span className="text-gray-600">{formatOption(value as AnswerOption)}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="flex justify-end">
+                <button 
+                  onClick={copyPathToClipboard}
+                  className="flex items-center text-sm bg-blue-50 hover:bg-blue-100 text-blue-600 py-1 px-3 rounded border border-blue-200 transition-all duration-200"
+                  title="Copy decision path"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M8 3a1 1 0 011-1h2a1 1 0 110 2H9a1 1 0 01-1-1z" />
+                    <path d="M6 3a2 2 0 00-2 2v11a2 2 0 002 2h8a2 2 0 002-2V5a2 2 0 00-2-2 3 3 0 01-3 3H9a3 3 0 01-3-3z" />
+                  </svg>
+                  {copyButtonText}
+                </button>
+              </div>
             </div>
           </div>
           
